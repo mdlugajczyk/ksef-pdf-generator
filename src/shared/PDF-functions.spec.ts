@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   createLabelText,
@@ -15,6 +15,11 @@ import {
   verticalSpacing,
 } from './PDF-functions';
 import FormatTyp, { Position } from './enums/common.enum';
+import { setLanguage } from './i18n';
+
+beforeEach(() => {
+  setLanguage('pl');
+});
 
 describe('formatText', () => {
   it('returns empty string for null or undefined value', () => {
@@ -68,6 +73,15 @@ describe('formatText', () => {
 
     expect(localDate).toEqual(timeZoneDate);
     vi.useRealTimers();
+  });
+
+  it('translates headers when language is English', () => {
+    setLanguage('en');
+
+    expect(formatText('Sprzedawca', FormatTyp.HeaderContent)).toStrictEqual({
+      text: 'Seller',
+      style: 'HeaderContent',
+    });
   });
 });
 

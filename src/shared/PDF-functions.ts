@@ -25,6 +25,7 @@ import { DifferentValues, FilteredKeysOfValues, TypesOfValues } from './types/un
 import { CreateLabelTextData } from './types/additional-data.types';
 import FormatTyp, { Answer, Position } from './enums/common.enum';
 import { TStawkaPodatku_FARR } from './consts/FARR.const';
+import { translateText } from './i18n';
 
 export function formatText(
   value: number | string | undefined | null,
@@ -35,7 +36,8 @@ export function formatText(
   if (!value) {
     return '';
   }
-  const result: ContentText = { text: value.toString() };
+  const normalizedValue = typeof value === 'string' ? translateText(value) : value.toString();
+  const result: ContentText = { text: normalizedValue };
 
   Object.assign(result, options);
 
@@ -239,7 +241,7 @@ export function createLabelText(
   if (typeof value === 'object') {
     return [
       {
-        text: [formatText(label, FormatTyp.Label), formatText(value._text, formatTyp)],
+        text: [formatText(translateText(label), FormatTyp.Label), formatText(value._text, formatTyp)],
         ...style,
       },
     ];
@@ -247,7 +249,7 @@ export function createLabelText(
 
   return [
     {
-      text: [formatText(label, FormatTyp.Label), formatText(value, formatTyp)],
+      text: [formatText(translateText(label), FormatTyp.Label), formatText(value, formatTyp)],
       ...style,
     },
   ];
@@ -269,7 +271,7 @@ export function createSection(content: Content[], isLineOnTop: boolean, margin?:
 export function createHeader(text: string, margin?: Margins): Content[] {
   return [
     {
-      stack: [formatText(text, FormatTyp.HeaderContent)],
+      stack: [formatText(translateText(text), FormatTyp.HeaderContent)],
       margin: margin ?? [0, 8, 0, 8],
     },
   ];
@@ -278,7 +280,7 @@ export function createHeader(text: string, margin?: Margins): Content[] {
 export function createSubHeader(text: string, margin?: Margins): Content[] {
   return [
     {
-      stack: [formatText(text, FormatTyp.SubHeaderContent)],
+      stack: [formatText(translateText(text), FormatTyp.SubHeaderContent)],
       margin: margin ?? [0, 4, 0, 4],
     },
   ];
@@ -541,7 +543,7 @@ export function verticalSpacing(height: number): ContentText {
 
 export function getKraj(code: string): string {
   if (Kraj[code]) {
-    return Kraj[code];
+    return translateText(Kraj[code]);
   }
   return code;
 }
@@ -564,11 +566,11 @@ export function getTStawkaPodatku(code: string, version: 1 | 2 | 3 | 'RR', P_PMa
       break;
   }
   if (!code && P_PMarzy === '1') {
-    return 'marża';
+    return translateText('marża');
   }
 
   if (TStawkaPodatkuVersioned[code]) {
-    return TStawkaPodatkuVersioned[code];
+    return translateText(TStawkaPodatkuVersioned[code]);
   }
   return code;
 }

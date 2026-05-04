@@ -10,6 +10,7 @@ import {
 import { Adnotacje } from '../../types/fa1.types';
 import FormatTyp from '../../../shared/enums/common.enum';
 import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/FA.const';
+import { translateContent, translateText } from '../../../shared/i18n';
 
 export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
   const result: Content[] = [];
@@ -126,7 +127,7 @@ export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
 
     if (result.length) {
       result.unshift(verticalSpacing(1));
-      result.unshift(createHeader('Adnotacje'));
+      result.unshift(createHeader(translateText('Adnotacje')));
       result.unshift(verticalSpacing(1));
       result.push(verticalSpacing(1));
     }
@@ -135,7 +136,7 @@ export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
       result.push(generateDostawy(adnotacje));
     }
   }
-  return result;
+  return translateContent(result);
 }
 
 export function generateDostawy(adnotacje: Adnotacje): Content[] {
@@ -285,7 +286,7 @@ export function generateDostawy(adnotacje: Adnotacje): Content[] {
       } as ContentTable,
     ]);
   }
-  return result;
+  return translateContent(result);
 }
 
 function addToColumn(
@@ -300,5 +301,3 @@ function addToColumn(
   }
   firstColumn.push(content);
 }
-
-

@@ -14,6 +14,7 @@ import { FP, Zamowienie } from '../../types/fa2.types';
 import FormatTyp, { Position } from '../../../shared/enums/common.enum';
 import { TableWithFields } from '../../types/fa1-additional-types';
 import { ZamowienieKorekta } from '../../enums/invoice.enums';
+import { translateText } from '../../../shared/i18n';
 
 export function generateZamowienie(
   orderData: Zamowienie | undefined,
@@ -103,13 +104,13 @@ export function generateZamowienie(
       table.push(content.content);
     }
   }
-  const ceny = `Faktura wystawiona w walucie ${KodWaluty}`;
+  const ceny = translateText(`Faktura wystawiona w walucie ${KodWaluty}`);
   let opis: Content = '';
 
   if (Number(p_15) > 0 && rodzajFaktury == TRodzajFaktury.ZAL) {
     opis = {
       stack: createLabelTextArray([
-        { value: 'Kwota zapłaty (zaliczki) dokumentowana fakturą: ', formatTyp: FormatTyp.LabelGreater },
+        { value: translateText('Kwota zapłaty (zaliczki) dokumentowana fakturą: '), formatTyp: FormatTyp.LabelGreater },
         { value: p_15, formatTyp: FormatTyp.CurrencyGreater },
       ]),
       alignment: Position.RIGHT,
@@ -123,7 +124,7 @@ export function generateZamowienie(
     opis = {
       stack: createLabelTextArray([
         {
-          value: 'Korekta kwoty zapłaty (zaliczki) dokumentowana fakturą: ',
+          value: translateText('Korekta kwoty zapłaty (zaliczki) dokumentowana fakturą: '),
           formatTyp: FormatTyp.LabelGreater,
         },
         { value: p_15, formatTyp: FormatTyp.CurrencyGreater },
@@ -150,5 +151,4 @@ export function generateZamowienie(
     },
   ];
 }
-
 

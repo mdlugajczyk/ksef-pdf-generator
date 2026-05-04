@@ -13,6 +13,7 @@ import { Adnotacje, NoweSrodkiTransportu, Zwolnienie } from '../../types/fa2.typ
 import FormatTyp from '../../../shared/enums/common.enum';
 import { DEFAULT_TABLE_LAYOUT } from '../../../shared/consts/FA.const';
 import { FP } from '../../types/fa1.types';
+import { translateContent, translateText } from '../../../shared/i18n';
 
 export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
   const result: Content[] = [];
@@ -112,7 +113,7 @@ export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
 
     if (result.length) {
       result.unshift(verticalSpacing(1));
-      result.unshift(createHeader('Adnotacje'));
+      result.unshift(createHeader(translateText('Adnotacje')));
       result.unshift(verticalSpacing(1));
       result.push(verticalSpacing(1));
     }
@@ -124,7 +125,7 @@ export function generateAdnotacje(adnotacje?: Adnotacje): Content[] {
       result.push(generateDostawy(adnotacje.NoweSrodkiTransportu));
     }
   }
-  return result;
+  return translateContent(result);
 }
 
 export function generateDostawy(noweSrodkiTransportu: NoweSrodkiTransportu): Content[] {
@@ -190,23 +191,23 @@ export function generateDostawy(noweSrodkiTransportu: NoweSrodkiTransportu): Con
         value.push(item.P_22B?._text ?? item.P_22C?._text ?? item.P_22D?._text ?? '');
       }
       if (item.P_22C1?._text) {
-        value.push(`Numer kadłuba nowego środka transportu:  ${item.P_22C1._text}`);
+        value.push(`${translateText('Numer kadłuba nowego środka transportu:  ')}${item.P_22C1._text}`);
       }
       if (item.P_22D1?._text) {
-        value.push(`Numer fabryczny nowego środka transportu: ${item.P_22D1._text}`);
+        value.push(`${translateText('Numer fabryczny nowego środka transportu: ')}${item.P_22D1._text}`);
       }
       if (anyP22N) {
         if (item.P_22B1?._text) {
-          value.push(`Numer VIN:  ${item.P_22B1._text}`);
+          value.push(`${translateText('Numer VIN:  ')}${item.P_22B1._text}`);
         }
         if (item.P_22B2?._text) {
-          value.push(`Numer nadwozia:  ${item.P_22B2._text}`);
+          value.push(`${translateText('Numer nadwozia:  ')}${item.P_22B2._text}`);
         }
         if (item.P_22B3?._text) {
-          value.push(`Numer podwozia:  ${item.P_22B3._text}`);
+          value.push(`${translateText('Numer podwozia:  ')}${item.P_22B3._text}`);
         }
         if (item.P_22B4?._text) {
-          value.push(`Numer ramy:  ${item.P_22B4._text}`);
+          value.push(`${translateText('Numer ramy:  ')}${item.P_22B4._text}`);
         }
       }
       if (item.P_22BT?._text) {
@@ -217,7 +218,5 @@ export function generateDostawy(noweSrodkiTransportu: NoweSrodkiTransportu): Con
     table.table.body = [[...definedHeader], ...tableBody] as TableCell[][];
   }
 
-  return tableBody.length ? [table, verticalSpacing(1)] : [];
+  return tableBody.length ? translateContent([table, verticalSpacing(1)]) : [];
 }
-
-

@@ -19,14 +19,15 @@ import { ObjectKeysOfFP, TypesOfValues } from '../../../shared/types/universal.t
 import FormatTyp from '../../../shared/enums/common.enum';
 import { FA3FakturaZaliczkowaData } from '../../types/common.types';
 import { formatDateTime } from '../../../shared/generators/common/functions';
+import { translateText } from '../../../shared/i18n';
 
 export function generateSzczegoly(faVat: Fa): Content[] {
   const faWiersze = getTable(faVat.FaWiersz);
   const zamowieniaWiersze = getTable(faVat.Zamowienie?.ZamowienieWiersz);
   const LabelP_6 =
     faVat.RodzajFaktury == TRodzajFaktury.ZAL || faVat.RodzajFaktury == TRodzajFaktury.KOR_ZAL
-      ? 'Data otrzymania zapłaty: '
-      : 'Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: ';
+      ? translateText('Data otrzymania zapłaty: ')
+      : translateText('Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: ');
 
   const P_6Scope: Content[] = generateP_6Scope(faVat.OkresFa?.P_6_Od, faVat.OkresFa?.P_6_Do);
 
@@ -34,13 +35,13 @@ export function generateSzczegoly(faVat: Fa): Content[] {
   const cenyLabel2: Content[] = [];
 
   if (hasValue(faVat.KodWaluty)) {
-    cenyLabel2.push(createLabelText('Kod waluty: ', faVat.KodWaluty));
+    cenyLabel2.push(createLabelText(translateText('Kod waluty: '), faVat.KodWaluty));
   }
 
   const P_12_XIILabel: Content[] = [];
 
   if (hasColumnsValue('P_12_XII', faWiersze) || hasColumnsValue('P_12_XII', zamowieniaWiersze)) {
-    P_12_XIILabel.push(createLabelText('Procedura One Stop Shop', ' '));
+    P_12_XIILabel.push(createLabelText(translateText('Procedura One Stop Shop'), ' '));
   }
 
   const kodWalutyLabel1: Content[] = [];
@@ -48,15 +49,15 @@ export function generateSzczegoly(faVat: Fa): Content[] {
 
   if (hasValue(faVat.KodWaluty) && getValue(faVat.KodWaluty) != 'PLN') {
     if (hasValue(faVat.KursWalutyZ)) {
-      kodWalutyLabel1.push(createLabelText('Kurs waluty wspólny dla wszystkich wierszy faktury', ' '));
-      kodWalutyLabel2.push(createLabelText('Kurs waluty: ', faVat.KursWalutyZ, FormatTyp.Currency6));
+      kodWalutyLabel1.push(createLabelText(translateText('Kurs waluty wspólny dla wszystkich wierszy faktury'), ' '));
+      kodWalutyLabel2.push(createLabelText(translateText('Kurs waluty: '), faVat.KursWalutyZ, FormatTyp.Currency6));
     } else {
       const Common_KursWaluty = getDifferentColumnsValue('KursWaluty', faWiersze);
 
       if (Common_KursWaluty.length === 1) {
-        kodWalutyLabel1.push(createLabelText('Kurs waluty wspólny dla wszystkich wierszy faktury', ' '));
+        kodWalutyLabel1.push(createLabelText(translateText('Kurs waluty wspólny dla wszystkich wierszy faktury'), ' '));
         kodWalutyLabel2.push(
-          createLabelText('Kurs waluty: ', Common_KursWaluty[0].value, FormatTyp.Currency6)
+          createLabelText(translateText('Kurs waluty: '), Common_KursWaluty[0].value, FormatTyp.Currency6)
         );
       }
     }
@@ -66,12 +67,12 @@ export function generateSzczegoly(faVat: Fa): Content[] {
 
   const forColumns = [
     createLabelText(
-      'Data wystawienia, z zastrzeżeniem art. 106na ust. 1 ustawy: ',
+      translateText('Data wystawienia, z zastrzeżeniem art. 106na ust. 1 ustawy: '),
       faVat.P_1,
       FormatTyp.Date
     ),
-    createLabelText('Miejsce wystawienia: ', faVat.P_1M),
-    createLabelText('Okres, którego dotyczy rabat: ', faVat.OkresFaKorygowanej),
+    createLabelText(translateText('Miejsce wystawienia: '), faVat.P_1M),
+    createLabelText(translateText('Okres, którego dotyczy rabat: '), faVat.OkresFaKorygowanej),
     createLabelText(LabelP_6, faVat.P_6, FormatTyp.Date),
     P_6Scope,
     cenyLabel1,
@@ -108,25 +109,23 @@ function generateP_6Scope(P_6_Od: TypesOfValues, P_6_Do: TypesOfValues): Content
   if (hasValue(P_6_Od) && hasValue(P_6_Do)) {
     table.push(
       createLabelTextArray([
-        {
-          value: 'Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: od ',
-        },
+        { value: translateText('Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: od ') },
         { value: formatDateTime(getValue(P_6_Od) as string, true, true), formatTyp: FormatTyp.Value },
-        { value: ' do ' },
+        { value: translateText(' do ') },
         { value: formatDateTime(getValue(P_6_Do) as string, true, true), formatTyp: FormatTyp.Value },
       ])
     );
   } else if (hasValue(P_6_Od)) {
     table.push(
       createLabelText(
-        'Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: od ',
+        translateText('Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: od '),
         formatDateTime(getValue(P_6_Od) as string, true, true)
       )
     );
   } else if (hasValue(P_6_Do)) {
     table.push(
       createLabelText(
-        'Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: do ',
+        translateText('Data dokonania lub zakończenia dostawy towarów lub wykonania usługi: do '),
         formatDateTime(getValue(P_6_Do) as string, true, true)
       )
     );
@@ -142,9 +141,9 @@ function generateZaliczkaCzesciowa(zaliczkaCzesciowaData: ZaliczkaCzesciowa[] | 
   const table: Content[] = [];
 
   const zaplataCzesciowaHeader: HeaderDefine[] = [
-    { name: 'P_6Z', title: 'Data otrzymania płatności', format: FormatTyp.Date },
-    { name: 'P_15Z', title: 'Kwota płatności', format: FormatTyp.Default },
-    { name: 'KursWalutyZW', title: 'Kurs waluty', format: FormatTyp.Currency6 },
+    { name: 'P_6Z', title: translateText('Data otrzymania płatności'), format: FormatTyp.Date },
+    { name: 'P_15Z', title: translateText('Kwota płatności'), format: FormatTyp.Default },
+    { name: 'KursWalutyZW', title: translateText('Kurs waluty'), format: FormatTyp.Currency6 },
   ];
 
   const tableZaliczkaCzesciowa = getContentTable<(typeof zaplataCzesciowa)[0]>(
@@ -179,7 +178,7 @@ function generateFakturaZaliczkowa(fakturaZaliczkowaData: ObjectKeysOfFP[] | und
   const fakturaZaliczkowaHeader: HeaderDefine[] = [
     {
       name: 'NrFaZaliczkowej',
-      title: 'Numery wcześniejszych faktur zaliczkowych',
+      title: translateText('Numery wcześniejszych faktur zaliczkowych'),
       format: FormatTyp.Default,
     },
   ];
@@ -196,5 +195,4 @@ function generateFakturaZaliczkowa(fakturaZaliczkowaData: ObjectKeysOfFP[] | und
   }
   return table;
 }
-
 

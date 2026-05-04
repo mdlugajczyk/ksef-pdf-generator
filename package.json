@@ -2,7 +2,8 @@
   "name": "ksef-pdf-generator",
   "version": "1.4.5",
   "scripts": {
-    "ksef-pdf-generator": "tsx src/ksef-pdf-generator.ts"
+    "ksef-pdf-generator": "tsx src/ksef-pdf-generator.ts",
+    "build:macos": "tsc -p tsconfig.json --outDir dist && printf '%s\n' '{\"type\":\"commonjs\"}' > dist/package.json && cp bin/ksef-pdf-generator-macos dist/ksef-pdf-generator && chmod +x dist/ksef-pdf-generator"
   },
   "type": "module",
   "keywords": [],

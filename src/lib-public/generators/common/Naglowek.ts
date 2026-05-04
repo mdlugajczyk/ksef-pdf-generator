@@ -6,6 +6,7 @@ import { Fa as Fa2 } from '../../types/fa2.types';
 import { Fa as Fa3, Zalacznik } from '../../types/fa3.types';
 import FormatTyp, { Position } from '../../../shared/enums/common.enum';
 import { AdditionalDataTypes } from '../../types/common.types';
+import { getLanguage } from '../../../shared/i18n';
 
 export function generateNaglowek(
   fa?: Fa2 | Fa3 | Fa1,
@@ -45,9 +46,9 @@ export function generateNaglowek(
   return [
     {
       text: [
-        { text: 'Krajowy System ', fontSize: 18 },
+        { text: getLanguage() === 'en' ? 'National ' : 'Krajowy System ', fontSize: 18 },
         { text: 'e', color: 'red', bold: true, fontSize: 18 },
-        { text: '-Faktur', bold: true, fontSize: 18 },
+        { text: getLanguage() === 'en' ? '-Invoice System' : '-Faktur', bold: true, fontSize: 18 },
       ],
     },
     { ...(formatText('Numer Faktury:', FormatTyp.ValueMedium) as ContentText), alignment: Position.RIGHT },
@@ -85,5 +86,3 @@ export function generateNaglowek(
       : []),
   ];
 }
-
-

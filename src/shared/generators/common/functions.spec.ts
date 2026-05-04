@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
   FA1RolaPodmiotu3,
@@ -14,8 +14,13 @@ import {
   getDateTimeWithoutSeconds,
   translateMap,
 } from '@shared/generators/common/functions';
+import { setLanguage } from '@shared/i18n';
 
 vi.unmock('@shared/generators/common/functions');
+
+beforeEach(() => {
+  setLanguage('pl');
+});
 
 describe('translateMap RolaPodmimotu', () => {
   it('returns empty string if rola undefined or _text missing', () => {
@@ -55,6 +60,14 @@ describe('FormaPlatnosci', () => {
     const expected = FormaPlatnosci[key as keyof typeof FormaPlatnosci];
 
     expect(translateMap({ _text: key } as any, FormaPlatnosci)).toBe(expected);
+  });
+
+  it('translates known values to English when language is English', () => {
+    setLanguage('en');
+
+    const key = Object.keys(FormaPlatnosci)[0];
+
+    expect(translateMap({ _text: key } as any, FormaPlatnosci)).toBe('Cash');
   });
 });
 

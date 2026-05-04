@@ -21,6 +21,7 @@ import { Faktura } from './types/fa3.types';
 import { ZamowienieKorekta } from './enums/invoice.enums';
 import { AdditionalDataTypes } from './types/common.types';
 import { Position } from '../shared/enums/common.enum';
+import { getLanguage } from '../shared/i18n';
 
 pdfMake.addVirtualFileSystem(pdfFonts);
 
@@ -58,7 +59,7 @@ export function generateFA3(invoice: Faktura, additionalData: AdditionalDataType
     ...(dataUri && { files: { xml: { src: dataUri, name: filename, hidden: false, relationship: relationship, description: description, creationDate: dateInv, modifiedDate: dateInvStor, type: 'application/xml' } as Attachment } }),
     footer: (currentPage, pageCount) => {
       return {
-        text: currentPage.toString() + ' z ' + pageCount,
+        text: getLanguage() === 'en' ? currentPage.toString() + ' of ' + pageCount : currentPage.toString() + ' z ' + pageCount,
         alignment: Position.RIGHT,
         margin: [0, 0, 40, 0],
       };

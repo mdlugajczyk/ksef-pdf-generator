@@ -143,4 +143,3 @@ export function generateWiersze(faVat: Fa): Content {
   return createSection([...createHeader('Pozycje'), ceny, ...table, ...opis], true);
 }
 
-

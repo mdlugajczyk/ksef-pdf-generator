@@ -9,6 +9,7 @@ import { Faktura as Faktura2 } from './lib-public/types/fa2.types';
 import { Faktura as Faktura3 } from './lib-public/types/fa3.types';
 import { FaRR } from './lib-public/types/FaRR.types';
 import { AdditionalDataTypes } from './lib-public/types/common.types';
+import { setLanguage } from './shared/i18n';
 import Base64url from "crypto-js/enc-base64url"
 import SHA256 from "crypto-js/sha256";
 import os from 'node:os';
@@ -139,6 +140,7 @@ Options:
   [-e], [--emo]                               Show emoticons in on-screen messages
   [-q], [--quiet]                             Quiet mode, does not display messages on the screen
   [-w], [--overwrite]                         Overwrite the PDF invoice file if it exists (default: do not overwrite the PDF invoice file if it exists)
+  [--lang] [pl|en]                            Language of rendered invoice labels
   -h, --help                                  Show this help message
 
 Attention:
@@ -168,6 +170,7 @@ Example:
   let is_s = false;
   let is_w = false;
   let is_linux = false;
+  let language = 'pl';
   let inputFiles = [];
   let pdf;
   
@@ -191,11 +194,15 @@ Example:
       is_q = true;
     }  else if (arg === '-w' || arg === '--overwrite') {
       is_w = true;
+    } else if (arg === '--lang' || arg === '-l') {
+      language = (args[++i] ?? 'pl').toLowerCase();
     } else if (!arg.startsWith('-')) {
       inputFile = path_linux(arg, is_linux);
       is_i  = true;
     }
   }
+
+  setLanguage(language === 'en' ? 'en' : 'pl');
 
   if (!is_q) console.log(`
 KSeF PDF Generator - ver. 1.4.5

@@ -43,6 +43,7 @@ In this version [**1.4.5 releases**](https://github.com/sstybel/ksef-pdf-generat
 * [`-e`], [`--emo`] - Show emoticons in on-screen messages
 * [`-q`], [`--quiet`] - Quiet mode, does not display messages on the screen
 * [`-w`], [`--overwrite`] - Overwrite the PDF invoice file if it exists (default: do not overwrite the PDF invoice file if it exists)
+* [`--lang`] [`pl`|`en`] - Language of rendered invoice labels
 * [`-h`], [`--help`] - Display this help message
 
 **Notes:**
@@ -50,6 +51,26 @@ In this version [**1.4.5 releases**](https://github.com/sstybel/ksef-pdf-generat
 * If the **KSeF number** is not found, the value **“NONE”** is used.
 * The **QR code** is generated based on the **KSeF number**. If the **KSeF number** is not found, the **KSeF** value will be used as **“NONE”** and the **QR code** will use **“`0101010101-20260201-1A2B3C456D7E-F8`”** (**KSeF number**) as the default value for generating the **QR code**.
 * If you use the [**KSeF XML Downloader**](https://github.com/sstybel/ksef-xml-download) to generate invoices based on the status of downloaded invoices, the **PDF** invoice visualizations will be saved in the same location as the **KSeF XML** invoice files. The invoice name will be the same as the **KSeF XML** invoice file, with the extension changed from **XML** to **PDF**.
+
+## macOS
+
+The checked-in `bin/ksef-pdf-generator` file is a Linux ELF executable, so it will not run on macOS. The repository also does not contain a macOS release binary.
+
+On macOS, the simplest way to use the project is to run the TypeScript entrypoint directly:
+
+```sh
+pnpm install
+pnpm run ksef-pdf-generator -- ./examples/invoice.xml
+```
+
+If you want a local macOS launcher script, build the TypeScript sources and copy the wrapper:
+
+```sh
+pnpm run build:macos
+./dist/ksef-pdf-generator --lang en ./examples/invoice.xml
+```
+
+That wrapper calls the system `node` binary and the compiled JavaScript in `dist/`, so it works on macOS without the Linux-only executable.
 
 ## Examples
 

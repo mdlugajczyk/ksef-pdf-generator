@@ -10,6 +10,7 @@ import {
   getTStawkaPodatku,
   getValue,
 } from '../../../shared/PDF-functions';
+import { translateText } from '../../../shared/i18n';
 import { HeaderDefine } from '../../../shared/types/pdf-types';
 import { TRodzajFaktury } from '../../../shared/consts/FA.const';
 import { Fa, FP } from '../../types/fa3.types';
@@ -90,7 +91,7 @@ export function generateWiersze(faVat: Fa): Content {
   if (rodzajFaktury == TRodzajFaktury.ROZ && Number(p_15) !== 0) {
     opis = {
       stack: createLabelTextArray([
-        { value: 'Kwota pozostała do zapłaty: ', formatTyp: FormatTyp.LabelGreater },
+        { value: translateText('Kwota pozostała do zapłaty: '), formatTyp: FormatTyp.LabelGreater },
         {
           value: p_15,
           formatTyp: FormatTyp.CurrencyGreater,
@@ -109,7 +110,7 @@ export function generateWiersze(faVat: Fa): Content {
   ) {
     opis = {
       stack: createLabelTextArray([
-        { value: 'Kwota należności ogółem: ', formatTyp: FormatTyp.LabelGreater },
+        { value: translateText('Kwota należności ogółem: '), formatTyp: FormatTyp.LabelGreater },
         {
           value: p_15,
           formatTyp: [FormatTyp.CurrencyGreater, FormatTyp.HeaderContent, FormatTyp.Value],
@@ -138,5 +139,3 @@ export function generateWiersze(faVat: Fa): Content {
   }
   return createSection([...createHeader('Pozycje'), ceny, ...table, opis], true);
 }
-
-

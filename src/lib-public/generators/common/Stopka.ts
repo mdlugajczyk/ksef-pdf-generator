@@ -13,6 +13,7 @@ import {
   getTable,
   verticalSpacing,
 } from '../../../shared/PDF-functions';
+import { translateContent } from '../../../shared/i18n';
 import { FormContentState } from '../../../shared/types/additional-data.types';
 import { HeaderDefine } from '../../../shared/types/pdf-types';
 import { AdditionalDataTypes } from '../../types/common.types';
@@ -32,7 +33,7 @@ export function generateStopka(
   const rejestry: Content[] = generateRejestry(stopka);
   const informacje: Content[] = generateInformacje(stopka);
   const qrCode: Content[] = generateQRCodeData(additionalData);
-  const qr2Code: Content[] = generateQR2CodeData(additionalData);
+  const qr2Code: Content[] = [];
   const zalaczniki: Content[] = !additionalData?.isMobile ? generateZalaczniki(zalacznik) : [];
 
   const result: Content = [
@@ -44,7 +45,6 @@ export function generateStopka(
     ...informacje,
     ...(zalaczniki.length ? zalaczniki : []),
     { stack: [...qrCode], unbreakable: true },
-    { stack: [...qr2Code], unbreakable: true },
     createSection(
       [
         {
@@ -57,7 +57,7 @@ export function generateStopka(
     ),
   ];
 
-  return createSection(result, false);
+  return createSection(translateContent(result), false);
 }
 
 function generateWZ(wz?: FP[]): Content[] {
@@ -172,46 +172,3 @@ function generateQRCodeData(additionalData?: AdditionalDataTypes): Content[] {
 function breakLongText(text: string, chunk = 60): string {
   return text.match(new RegExp(`.{1,${chunk}}`, 'g'))?.join('\n') || text;
 }
-
-function generateQR2CodeData(additionalData?: AdditionalDataTypes): Content[] {
-  const result: Content = [];
-  const QR_SIZE = 210;
-
-  if (additionalData?.qr2Code) {
-    const qrCode: ContentQr | undefined = generateQRCode(additionalData.qr2Code);
-
-    result.push(createHeader('Zweryfikuj dostawcę faktury'));
-    if (qrCode) {
-      qrCode.fit = QR_SIZE;
-
-      result.push({
-        columns: [
-          {
-            stack: [qrCode, { text: 'CERTYFIKAT', alignment: 'center', margin: [0, 8, 0, 0] }],
-            alignment: 'center',
-            width: 'auto',
-          },
-          {
-            stack: [
-              formatText(
-                'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji wystawcy faktury!',
-                FormatTyp.Label
-              ),
-              {
-                text: formatText(breakLongText(additionalData.qr2Code), FormatTyp.Link),
-                link: additionalData.qr2Code,
-                margin: [0, 5, 0, 0],
-              },
-            ],
-            margin: [0, 2, 0, 0],
-            alignment: 'left',
-          },
-        ],
-        columnGap: 20,
-      });
-    }
-  }
-  return createSection(result, true);
-}
-
-
