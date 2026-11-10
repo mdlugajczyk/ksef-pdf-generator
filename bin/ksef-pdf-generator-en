@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+
+if [ "$#" -ne 1 ]; then
+  echo "Usage: $(basename "$0") /path/to/invoice.xml" >&2
+  exit 2
+fi
+
+INPUT_FILE=$1
+
+if [ ! -f "$INPUT_FILE" ]; then
+  echo "Input XML file not found: $INPUT_FILE" >&2
+  exit 1
+fi
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+OUTPUT_DIR="$HOME/Dropbox/Firma/Invoices"
+INPUT_NAME=$(basename "$INPUT_FILE")
+OUTPUT_NAME=${INPUT_NAME%.xml}-en.pdf
+
+if [ "$OUTPUT_NAME" = "$INPUT_NAME" ]; then
+  OUTPUT_NAME="$INPUT_NAME-en.pdf"
+fi
+
+mkdir -p "$OUTPUT_DIR"
+OUTPUT_FILE="$OUTPUT_DIR/$OUTPUT_NAME"
+
+exec "$SCRIPT_DIR/ksef-pdf-generator-macos" --lang en "$INPUT_FILE" -o "$OUTPUT_FILE"

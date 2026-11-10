@@ -57,6 +57,7 @@ const TRANSLATIONS_EN: Record<string, string> = {
   Inna: 'Other',
   'Opis płatności innej': 'Other payment description',
   'Opis płatności innej: ': 'Other payment description: ',
+  godzina: 'hour',
   'Rodzaj informacji': 'Information type',
   'Treść informacji': 'Information content',
   'Numer dokumentu': 'Document number',

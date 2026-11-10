@@ -1,13 +1,11 @@
-import { Content, ContentQr } from 'pdfmake/interfaces';
+import { Content } from 'pdfmake/interfaces';
 import FormatTyp from '../../../shared/enums/common.enum';
 import {
   createHeader,
   createLabelText,
   createSection,
   createSubHeader,
-  formatText,
   generateLine,
-  generateQRCode,
   generateTwoColumns,
   getContentTable,
   getTable,
@@ -32,8 +30,6 @@ export function generateStopka(
   const wzty: Content[] = generateWZ(wz);
   const rejestry: Content[] = generateRejestry(stopka);
   const informacje: Content[] = generateInformacje(stopka);
-  const qrCode: Content[] = generateQRCodeData(additionalData);
-  const qr2Code: Content[] = [];
   const zalaczniki: Content[] = !additionalData?.isMobile ? generateZalaczniki(zalacznik) : [];
 
   const result: Content = [
@@ -44,7 +40,6 @@ export function generateStopka(
     ...rejestry,
     ...informacje,
     ...(zalaczniki.length ? zalaczniki : []),
-    { stack: [...qrCode], unbreakable: true },
     createSection(
       [
         {
@@ -118,57 +113,4 @@ function generateInformacje(stopka?: Stopka): Content[] {
     result.push(content.content);
   }
   return result;
-}
-
-function generateQRCodeData(additionalData?: AdditionalDataTypes): Content[] {
-  const result: Content = [];
-  const QR_SIZE = 150;
-
-  if (additionalData?.qrCode) {
-    const qrCode: ContentQr | undefined = generateQRCode(additionalData.qrCode);
-
-    result.push(createHeader('Sprawdź, czy Twoja faktura znajduje się w KSeF!'));
-    if (qrCode) {
-      qrCode.fit = QR_SIZE;
-
-      result.push({
-        columns: [
-          {
-            stack: [
-              qrCode,
-              {
-                text: additionalData.qr2Code ? 'OFFLINE' : additionalData.nrKSeF,
-                alignment: 'center',
-                margin: [0, 8, 0, 0],
-              },
-            ],
-            alignment: 'center',
-            width: 'auto',
-          },
-          {
-            stack: [
-              formatText(
-                'Nie możesz zeskanować kodu z obrazka? Kliknij w link weryfikacyjny i przejdź do weryfikacji faktury!',
-                FormatTyp.Label
-              ),
-              {
-                text: formatText(additionalData.qrCode, FormatTyp.Link),
-                link: additionalData.qrCode,
-                margin: [0, 5, 0, 0],
-              },
-            ],
-            margin: [0, 2, 0, 0],
-            width: 330,
-            alignment: 'left',
-          },
-        ],
-        columnGap: 20,
-      });
-    }
-  }
-  return createSection(result, true);
-}
-
-function breakLongText(text: string, chunk = 60): string {
-  return text.match(new RegExp(`.{1,${chunk}}`, 'g'))?.join('\n') || text;
 }

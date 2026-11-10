@@ -1,6 +1,7 @@
 import { Content } from 'pdfmake/interfaces';
 import { createHeader, createLabelText, formatText, getValue } from '../../../shared/PDF-functions';
 import FormatTyp from '../../../shared/enums/common.enum';
+import { getLanguage } from '../../../shared/i18n';
 import { Podmiot2 } from '../../types/fa3.types';
 import { generateAdres } from './Adres';
 import { generateDaneIdentyfikacyjneTPodmiot2Dto } from './PodmiotDaneIdentyfikacyjneTPodmiot2Dto';
@@ -50,7 +51,7 @@ export function generatePodmiot2(podmiot2: Podmiot2): Content[] {
     );
   }
 
-  if (podmiot2?.GV) {
+  if (podmiot2?.GV && getLanguage() !== 'en') {
     result.push(
       createLabelText(
         'Faktura dotyczy członka grupy GV: ',
@@ -63,5 +64,4 @@ export function generatePodmiot2(podmiot2: Podmiot2): Content[] {
 
   return result;
 }
-
 
